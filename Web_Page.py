@@ -121,9 +121,19 @@ def st_lucide(icon_name,size=35,color=None):
 @st.cache_data
 def load_data():
 
-    df = pd.read_csv(
-        "amazon_sales.csv"
-    )
+import os
+import pandas as pd
+
+file_path = "amazon_sales.csv"
+
+if os.path.exists(file_path):
+    df = pd.read_csv(file_path)
+else:
+    # fallback sample data for deployment
+    df = pd.DataFrame({
+        "product": ["A", "B", "C"],
+        "sales": [100, 200, 300]
+    })
 
     df['purchase_date'] = pd.to_datetime(
         df['purchase_date'],
