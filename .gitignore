@@ -2,3 +2,5 @@ venv/
 __pycache__/
 *.pyc
 .env
+amazon_sales.csv
+insert_statements.sql
