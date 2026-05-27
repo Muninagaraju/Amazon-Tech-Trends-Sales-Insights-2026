@@ -118,6 +118,10 @@ def st_lucide(icon_name,size=35,color=None):
 # LOAD DATA
 # ==========================================
 
+import os
+import pandas as pd
+import streamlit as st
+
 @st.cache_data
 def load_data():
 
@@ -147,8 +151,9 @@ def load_data():
 
         return df
 
-    st.error("amazon_sales.csv not found")
-    return pd.DataFrame()
+    else:
+        st.error("amazon_sales.csv not found")
+        return pd.DataFrame()
 # ==========================================
 # HEADER
 # ==========================================
