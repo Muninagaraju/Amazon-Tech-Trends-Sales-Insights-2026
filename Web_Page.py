@@ -235,8 +235,7 @@ if payment:
 # ==========================================
 st.write(filtered_df.columns)
 total_revenue = filtered_df["final_price"].sum()
-"final_price"
-].sum()
+total_revenue = filtered_df["final_price"].sum()
 
 orders=len(filtered_df)
 
