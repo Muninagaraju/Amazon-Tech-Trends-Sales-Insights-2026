@@ -234,6 +234,9 @@ if payment:
 # KPI
 # ==========================================
 st.write(filtered_df.columns)
+st.write(filtered_df)
+st.write(filtered_df.columns)
+st.write(type(filtered_df))
 total_revenue = filtered_df["final_price"].sum()
 total_revenue = filtered_df["final_price"].sum()
 
