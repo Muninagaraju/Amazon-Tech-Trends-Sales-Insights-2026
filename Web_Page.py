@@ -119,15 +119,27 @@ def st_lucide(icon_name,size=35,color=None):
 # ==========================================
 import pandas as pd
 import streamlit as st
+import os
 
 
 @st.cache_data
 def load_data():
 
-    file_path = "amazon_sales.csv"
+    BASE_DIR = os.path.dirname(__file__)
+
+    file_path = os.path.join(
+        BASE_DIR,
+        "amazon_sales.csv"
+    )
 
     try:
         df = pd.read_csv(file_path)
+
+        df.columns = (
+            df.columns
+            .str.strip()
+            .str.lower()
+        )
 
         df["purchase_date"] = pd.to_datetime(
             df["purchase_date"],
@@ -142,12 +154,9 @@ def load_data():
         return pd.DataFrame()
 
 
-# LOAD DATA
 df = load_data()
 
-# CHECK
-if not df.empty:
-    st.write(df.head())
+filtered_df = df.copy()
 # ==========================================
 # HEADER
 # ==========================================
