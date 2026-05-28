@@ -118,7 +118,12 @@ def st_lucide(icon_name,size=35,color=None):
 # LOAD DATA
 # ==========================================
 @st.cache_data
-def load_data():
+# Load data first
+df = load_data()
+
+# Then use dataframe
+if "category" in df.columns:
+    st.write(df["category"].value_counts())
     try:
         df = pd.read_csv("amazon_sales.csv")
 
