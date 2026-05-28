@@ -120,6 +120,7 @@ def st_lucide(icon_name,size=35,color=None):
 
 @st.cache_data
 def load_data():
+df = load_data()
 
     file_path = "amazon_sales.csv"
 
