@@ -151,7 +151,7 @@ if os.path.exists(file_path):
 
     st.error("amazon_sales.csv not found")
     return pd.DataFrame()
-    df = load_data()
+        df = load_data()
 
 if df.empty:
     st.stop()
