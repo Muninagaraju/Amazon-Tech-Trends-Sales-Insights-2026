@@ -125,7 +125,8 @@ import os
 @st.cache_data
 def load_data():
 
-    BASE_DIR = os.path.dirname(__file__)
+    # Absolute file path
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
     file_path = os.path.join(
         BASE_DIR,
@@ -135,12 +136,14 @@ def load_data():
     try:
         df = pd.read_csv(file_path)
 
+        # Clean columns
         df.columns = (
             df.columns
             .str.strip()
             .str.lower()
         )
 
+        # Convert date column
         df["purchase_date"] = pd.to_datetime(
             df["purchase_date"],
             errors="coerce",
@@ -154,8 +157,10 @@ def load_data():
         return pd.DataFrame()
 
 
+# LOAD DATA
 df = load_data()
 
+# CREATE FILTERED DATAFRAME
 filtered_df = df.copy()
 # ==========================================
 # HEADER
@@ -247,7 +252,7 @@ st.write(filtered_df)
 st.write(filtered_df.columns)
 st.write(type(filtered_df))
 total_revenue = filtered_df["final_price"].sum()
-total_revenue = filtered_df["final_price"].sum()
+
 
 orders=len(filtered_df)
 
