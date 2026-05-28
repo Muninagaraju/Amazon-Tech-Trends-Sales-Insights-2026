@@ -117,17 +117,18 @@ def st_lucide(icon_name,size=35,color=None):
 # ==========================================
 # LOAD DATA
 # ==========================================
+import pandas as pd
+import streamlit as st
+
+
 @st.cache_data
-# Load data first
-df = load_data()
+def load_data():
 
-# Then use dataframe
-if "category" in df.columns:
-    st.write(df["category"].value_counts())
+    file_path = "amazon_sales.csv"
+
     try:
-        df = pd.read_csv("amazon_sales.csv")
+        df = pd.read_csv(file_path)
 
-        # Convert date column
         df["purchase_date"] = pd.to_datetime(
             df["purchase_date"],
             errors="coerce",
@@ -139,6 +140,14 @@ if "category" in df.columns:
     except Exception as e:
         st.error(f"Error: {e}")
         return pd.DataFrame()
+
+
+# LOAD DATA
+df = load_data()
+
+# CHECK
+if not df.empty:
+    st.write(df.head())
 # ==========================================
 # HEADER
 # ==========================================
