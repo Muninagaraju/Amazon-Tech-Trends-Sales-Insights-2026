@@ -117,44 +117,32 @@ def st_lucide(icon_name,size=35,color=None):
 # ==========================================
 # LOAD DATA
 # ==========================================
-
 @st.cache_data
 def load_data():
-    ...
-    return df
-
-df = load_data()
-file_path = "amazon_sales.csv"
-if os.path.exists(file_path):
+    try:
+        file_path = "amazon_sales.csv"
 
         df = pd.read_csv(file_path)
 
-        df = df.dropna()
-        df = df.drop_duplicates()
-
-        df["purchase_date"] = pd.to_datetime(
-            df["purchase_date"],
-            format="%d-%m-%Y",
-            errors="coerce"
-        )
-
-        df = df.dropna(subset=["purchase_date"])
-
-        df["is_returned"] = (
-            df["is_returned"]
-            .astype(str)
-            .str.lower()
-            .map({"true": 1, "false": 0})
-        )
+        # Example cleaning
+        df.columns = df.columns.str.lower()
 
         return df
 
-    st.error("amazon_sales.csv not found")
-    return pd.DataFrame()
-        df = load_data()
+    except FileNotFoundError:
+        st.error("amazon_sales.csv not found")
+        return pd.DataFrame()
 
+
+# Load dataframe
+df = load_data()
+
+# Check data
 if df.empty:
-    st.stop()
+    st.warning("No data available")
+else:
+    st.success("Data loaded successfully")
+    st.write(df.head())
 # ==========================================
 # HEADER
 # ==========================================
