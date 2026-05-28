@@ -149,6 +149,10 @@ def load_data():
 
     st.error("amazon_sales.csv not found")
     return pd.DataFrame()
+    df = load_data()
+
+if df.empty:
+    st.stop()
 # ==========================================
 # HEADER
 # ==========================================
@@ -179,37 +183,57 @@ st.divider()
 # SIDEBAR FILTERS
 # ==========================================
 
-st.sidebar.header(
-"Dashboard Filters"
+st.sidebar.header("Dashboard Filters")
+
+# CATEGORY (SAFE)
+if "category" in df.columns:
+    category_options = sorted(df["category"].dropna().unique())
+else:
+    category_options = []
+
+category = st.sidebar.multiselect(
+    "Category",
+    category_options,
+    default=category_options
 )
 
-category=st.sidebar.multiselect(
-"Category",
-sorted(df["category"].unique()),
-default=sorted(df["category"].unique())
+# DEVICE (SAFE)
+if "device" in df.columns:
+    device_options = sorted(df["device"].dropna().unique())
+else:
+    device_options = []
+
+device = st.sidebar.multiselect(
+    "Device",
+    device_options,
+    default=device_options
 )
 
-device=st.sidebar.multiselect(
-"Device",
-sorted(df["device"].unique()),
-default=sorted(df["device"].unique())
+# PAYMENT (SAFE)
+if "payment_method" in df.columns:
+    payment_options = sorted(df["payment_method"].dropna().unique())
+else:
+    payment_options = []
+
+payment = st.sidebar.multiselect(
+    "Payment Method",
+    payment_options,
+    default=payment_options
 )
+# ==========================================
+# FILTER DATA (ADD THIS HERE)
+# ==========================================
 
-payment=st.sidebar.multiselect(
-"Payment Method",
-sorted(df["payment_method"].unique()),
-default=sorted(df["payment_method"].unique())
-)
+filtered_df = df.copy()
 
+if category:
+    filtered_df = filtered_df[filtered_df["category"].isin(category)]
 
-filtered_df=df[
-(df["category"].isin(category))
-&
-(df["device"].isin(device))
-&
-(df["payment_method"].isin(payment))
-]
+if device:
+    filtered_df = filtered_df[filtered_df["device"].isin(device)]
 
+if payment:
+    filtered_df = filtered_df[filtered_df["payment_method"].isin(payment)]
 
 # ==========================================
 # KPI
