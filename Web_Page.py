@@ -124,7 +124,6 @@ def load_data():
     return df
 
 df = load_data()
-
     file_path = "amazon_sales.csv"
 
     if os.path.exists(file_path):
