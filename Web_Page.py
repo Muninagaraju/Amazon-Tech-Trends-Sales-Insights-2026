@@ -1,5 +1,5 @@
 # ==========================================
-# AMAZON E-COMMERCE DASHBOARD (FIXED VERSION)
+# AMAZON E-COMMERCE DASHBOARD
 # ==========================================
 
 import streamlit as st
@@ -9,6 +9,7 @@ from PIL import Image
 import requests
 import base64
 import os
+
 
 # ==========================================
 # PAGE CONFIG
@@ -23,6 +24,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+
 # ==========================================
 # THEME
 # ==========================================
@@ -36,8 +38,84 @@ else:
     ICON_COLOR = "#1B06BD"
     PLOT_THEME = "plotly_white"
 
+
 # ==========================================
-# LOAD DATA (FIXED)
+# CSS
+# ==========================================
+
+st.markdown("""
+<style>
+
+.main{
+padding-top:20px;
+}
+
+[data-testid="stSidebar"]{
+background-color:#111827;
+}
+
+div[data-testid="metric-container"]{
+background:#1E293B;
+padding:20px;
+border-radius:15px;
+border:1px solid #38BDF8;
+box-shadow:0px 0px 15px rgba(56,189,248,.3);
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+
+# ==========================================
+# ICON FUNCTIONS
+# ==========================================
+
+@st.cache_data
+def get_icon(icon_name,color):
+
+    url=f"https://cdn.jsdelivr.net/npm/lucide-static/icons/{icon_name}.svg"
+
+    response=requests.get(url)
+
+    if response.status_code==200:
+
+        svg=response.text
+
+        svg=svg.replace(
+            'stroke="currentColor"',
+            f'stroke="{color}"'
+        )
+
+        return base64.b64encode(
+            svg.encode()
+        ).decode()
+
+    return None
+
+
+def st_lucide(icon_name,size=35,color=None):
+
+    if color is None:
+        color=ICON_COLOR
+
+    b64=get_icon(
+        icon_name,
+        color
+    )
+
+    if b64:
+
+        st.markdown(
+        f"""
+        <img src="data:image/svg+xml;base64,{b64}"
+        width="{size}">
+        """,
+        unsafe_allow_html=True
+        )
+
+
+# ==========================================
+# LOAD DATA
 # ==========================================
 
 @st.cache_data
@@ -71,95 +149,193 @@ def load_data():
 
     st.error("amazon_sales.csv not found")
     return pd.DataFrame()
-
-# IMPORTANT: CREATE DF HERE
-df = load_data()
-
-# SAFETY CHECK
-if df is None or df.empty:
-    st.stop()
-
 # ==========================================
 # HEADER
 # ==========================================
 
-col1, col2 = st.columns([1, 6])
+col1,col2=st.columns([1,6])
 
 with col1:
-    st.image("OIP.jpg", width=60)
+
+    st_lucide(
+    "shopping-cart",
+    70
+    )
 
 with col2:
-    st.title("Amazon E-Commerce Dashboard")
-    st.caption("Interactive Sales Analysis Dashboard")
+
+    st.title(
+    "Amazon E-Commerce Dashboard"
+    )
+
+    st.caption(
+    "Interactive Sales Analysis Dashboard"
+    )
 
 st.divider()
 
+
 # ==========================================
-# SIDEBAR FILTERS (FIXED)
+# SIDEBAR FILTERS
 # ==========================================
 
-st.sidebar.header("Dashboard Filters")
-
-category = st.sidebar.multiselect(
-    "Category",
-    sorted(df["category"].dropna().unique()),
-    default=sorted(df["category"].dropna().unique())
+st.sidebar.header(
+"Dashboard Filters"
 )
 
-device = st.sidebar.multiselect(
-    "Device",
-    sorted(df["device"].dropna().unique()),
-    default=sorted(df["device"].dropna().unique())
+category=st.sidebar.multiselect(
+"Category",
+sorted(df["category"].unique()),
+default=sorted(df["category"].unique())
 )
 
-payment = st.sidebar.multiselect(
-    "Payment Method",
-    sorted(df["payment_method"].dropna().unique()),
-    default=sorted(df["payment_method"].dropna().unique())
+device=st.sidebar.multiselect(
+"Device",
+sorted(df["device"].unique()),
+default=sorted(df["device"].unique())
 )
 
-filtered_df = df[
-    (df["category"].isin(category)) &
-    (df["device"].isin(device)) &
-    (df["payment_method"].isin(payment))
+payment=st.sidebar.multiselect(
+"Payment Method",
+sorted(df["payment_method"].unique()),
+default=sorted(df["payment_method"].unique())
+)
+
+
+filtered_df=df[
+(df["category"].isin(category))
+&
+(df["device"].isin(device))
+&
+(df["payment_method"].isin(payment))
 ]
+
 
 # ==========================================
 # KPI
 # ==========================================
 
-total_revenue = filtered_df["final_price"].sum()
-orders = len(filtered_df)
+total_revenue=filtered_df[
+"final_price"
+].sum()
 
-best_category = filtered_df.groupby("category")["final_price"].sum().idxmax()
+orders=len(filtered_df)
 
-returns = filtered_df[filtered_df["is_returned"] == 1].shape[0]
+best_category=(
+filtered_df.groupby(
+"category"
+)["final_price"]
+.sum()
+.idxmax()
+)
+
+returns=filtered_df[
+filtered_df[
+"is_returned"
+]==1
+].shape[0]
+
+
+# ==========================================
+# KPI ICON
+# ==========================================
+
+def metric_icon(icon,bg_color):
+
+    b64=get_icon(
+    icon,
+    "white"
+    )
+
+    st.markdown(
+    f"""
+    <div style="
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:{bg_color};
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:10px;">
+    <img src="data:image/svg+xml;base64,{b64}" width="24">
+    </div>
+    """,
+    unsafe_allow_html=True
+    )
+
 
 # ==========================================
 # KPI DISPLAY
 # ==========================================
 
-col1, col2, col3, col4 = st.columns(4)
+col1,col2,col3,col4=st.columns(4)
 
 with col1:
-    st.metric("Revenue", f"₹{total_revenue:,.0f}")
+
+    metric_icon(
+    "indian-rupee",
+    "#10B981"
+    )
+
+    st.metric(
+    "Revenue",
+    f"₹{total_revenue:,.0f}"
+    )
+
 
 with col2:
-    st.metric("Orders", f"{orders:,}")
+
+    metric_icon(
+    "package",
+    "#3B82F6"
+    )
+
+    st.metric(
+    "Orders",
+    orders
+    )
+
 
 with col3:
-    st.metric("Best Category", best_category)
+
+    metric_icon(
+    "award",
+    "#F59E0B"
+    )
+
+    st.metric(
+    "Best Category",
+    best_category
+    )
+
 
 with col4:
-    st.metric("Returns", f"{returns:,}")
+
+    metric_icon(
+    "rotate-ccw",
+    "#EF4444"
+    )
+
+    st.metric(
+    "Returns",
+    returns
+    )
+
 
 # ==========================================
 # TABS
 # ==========================================
 
-tab1, tab2, tab3, tab4 = st.tabs(
-    ["Sales", "Brands", "Customers", "Insights"]
+tab1,tab2,tab3,tab4=st.tabs(
+[
+"Sales",
+"Brands",
+"Customers",
+"Insights"
+]
 )
+
 
 # ==========================================
 # SALES TAB
@@ -167,75 +343,170 @@ tab1, tab2, tab3, tab4 = st.tabs(
 
 with tab1:
 
-    category_sales = filtered_df.groupby("category")["final_price"].sum().reset_index()
+    col1,col2=st.columns(2)
 
-    fig = px.bar(
+    with col1:
+
+        category_sales=(
+        filtered_df.groupby(
+        "category"
+        )["final_price"]
+        .sum()
+        .reset_index()
+        )
+
+        fig=px.bar(
         category_sales,
         x="category",
         y="final_price",
+        color="final_price",
         template=PLOT_THEME
-    )
+        )
 
-    st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(
+        fig,
+        use_container_width=True
+        )
 
-    monthly = filtered_df.copy()
-    monthly["month"] = monthly["purchase_date"].dt.month
 
-    monthly_sales = monthly.groupby("month")["final_price"].sum().reset_index()
+    with col2:
 
-    fig2 = px.line(
+        monthly=filtered_df.copy()
+
+        monthly["month"]=(
+        monthly[
+        "purchase_date"
+        ].dt.month
+        )
+
+        monthly_sales=(
+        monthly.groupby(
+        "month"
+        )["final_price"]
+        .sum()
+        .reset_index()
+        )
+
+        fig=px.line(
         monthly_sales,
         x="month",
         y="final_price",
         markers=True,
         template=PLOT_THEME
-    )
+        )
 
-    st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(
+        fig,
+        use_container_width=True
+        )
+
 
 # ==========================================
-# BRANDS TAB
+# BRANDS
 # ==========================================
 
 with tab2:
 
-    brand_sales = filtered_df.groupby("brand")["final_price"].sum().reset_index()
-
-    fig = px.bar(
-        brand_sales.head(10),
-        x="brand",
-        y="final_price",
-        template=PLOT_THEME
+    brand_sales=(
+    filtered_df.groupby(
+    "brand"
+    )["final_price"]
+    .sum()
+    .reset_index()
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    fig=px.bar(
+    brand_sales.head(10),
+    x="brand",
+    y="final_price",
+    color="final_price",
+    template=PLOT_THEME
+    )
+
+    st.plotly_chart(
+    fig,
+    use_container_width=True
+    )
+
 
 # ==========================================
-# CUSTOMER TAB
+# CUSTOMER
 # ==========================================
 
 with tab3:
 
-    payment_data = filtered_df.groupby("payment_method")["final_price"].sum().reset_index()
+    col1,col2=st.columns(2)
 
-    fig = px.pie(
+    with col1:
+
+        payment_data=(
+        filtered_df.groupby(
+        "payment_method"
+        )["final_price"]
+        .sum()
+        .reset_index()
+        )
+
+        fig=px.pie(
         payment_data,
         names="payment_method",
         values="final_price",
-        hole=0.5
-    )
+        hole=.5,
+        template=PLOT_THEME
+        )
 
-    st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(
+        fig,
+        use_container_width=True
+        )
+
+
+    with col2:
+
+        device_data=(
+        filtered_df.groupby(
+        "device"
+        )["final_price"]
+        .sum()
+        .reset_index()
+        )
+
+        fig=px.bar(
+        device_data,
+        x="device",
+        y="final_price",
+        color="device",
+        template=PLOT_THEME
+        )
+
+        st.plotly_chart(
+        fig,
+        use_container_width=True
+        )
+
 
 # ==========================================
-# INSIGHTS TAB
+# INSIGHTS
 # ==========================================
 
 with tab4:
 
-    st.success(f"Revenue: ₹{total_revenue:,.0f}")
-    st.info(f"Best Category: {best_category}")
-    st.warning(f"Returns: {returns:,}")
+    st.subheader(
+    "Business Insights"
+    )
+
+    st.success(
+    f"💰 Revenue : ₹{total_revenue:,.0f}"
+    )
+
+    st.info(
+    f"🏆 Best Category : {best_category}"
+    )
+
+    st.warning(
+    f"🔄 Returns : {returns:,}"
+    )
+
 
 # ==========================================
 # FOOTER
@@ -243,13 +514,22 @@ with tab4:
 
 st.divider()
 
-col1, col2 = st.columns([1, 8])
+col1,col2=st.columns([1,8])
 
 with col1:
-    st.image("muninagaraju.png", width=60)
+
+    img=Image.open(
+    "muninagaraju.png"
+    )
+
+    st.image(
+    img,
+    width=60
+    )
 
 with col2:
+
     st.markdown("""
-**Created by Muninagaraju 👨‍💻**  
+**Created by Muninagaraju 👨‍💻**
 Data Analyst | Python | SQL | Streamlit
 """)
