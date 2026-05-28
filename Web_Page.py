@@ -117,30 +117,43 @@ def st_lucide(icon_name,size=35,color=None):
 # ==========================================
 # LOAD DATA
 # ==========================================
+import pandas as pd
+import streamlit as st
+
+
 @st.cache_data
 def load_data():
-    try:
-        file_path = "amazon_sales.csv"
+    file_path = "amazon_sales.csv"
 
+    try:
         df = pd.read_csv(file_path)
 
-        # Example cleaning
-        df.columns = df.columns.str.lower()
+        if df.empty:
+            st.warning("CSV file is empty")
+            return pd.DataFrame()
 
         return df
 
+    except pd.errors.EmptyDataError:
+        st.error("CSV file is empty")
+        return pd.DataFrame()
+
+    except pd.errors.ParserError:
+        st.error("CSV formatting issue detected")
+        return pd.DataFrame()
+
     except FileNotFoundError:
-        st.error("amazon_sales.csv not found")
+        st.error("CSV file not found")
+        return pd.DataFrame()
+
+    except Exception as e:
+        st.error(f"Unexpected error: {e}")
         return pd.DataFrame()
 
 
-# Load dataframe
 df = load_data()
 
-# Check data
-if df.empty:
-    st.warning("No data available")
-else:
+if not df.empty:
     st.success("Data loaded successfully")
     st.write(df.head())
 # ==========================================
