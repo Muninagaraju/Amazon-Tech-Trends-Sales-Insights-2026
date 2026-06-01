@@ -5,7 +5,7 @@ An interactive data analytics dashboard built with Python, Streamlit, Pandas, an
 
 ##  Live Demo
 
-** <img src="./icons/python.png" width="70"/> Dashboard:** [Amazon Tech Trends & Sales Insights 2026](https://amazon-tech-trends-sales-insights-2026-oyk9ezwumddom87pspspgs.streamlit.app/?utm_source=chatgpt.com)
+<img src="./icons/python.png" width="70"/>Dashboard: [Amazon Tech Trends & Sales Insights 2026](https://amazon-tech-trends-sales-insights-2026-oyk9ezwumddom87pspspgs.streamlit.app/?utm_source=chatgpt.com)
 
 ---
 
