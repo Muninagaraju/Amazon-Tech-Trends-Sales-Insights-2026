@@ -26,7 +26,7 @@ The dashboard transforms raw sales data into actionable business insights throug
 
 ---
 
-## 🎯 Business Objectives
+## <img src="./icons/business_objectives.png" width="70"> Business Objectives
 
 * Identify top-performing product categories
 * Monitor revenue growth trends
@@ -38,7 +38,7 @@ The dashboard transforms raw sales data into actionable business insights throug
 
 ---
 
-## 🛠️ Technology Stack
+## <img src="./icons/technology_stack.png" width="70">Technology Stack
 
 | Technology      | Purpose                  |
 | --------------- | ------------------------ |
@@ -53,7 +53,7 @@ The dashboard transforms raw sales data into actionable business insights throug
 
 ---
 
-## 📊 Dashboard Features
+## <img src="./icons/dashboard_fecture.png" width="70">Dashboard Features
 
 ### Executive KPI Dashboard
 
@@ -87,7 +87,7 @@ The dashboard transforms raw sales data into actionable business insights throug
 
 ---
 
-## 📂 Dataset Information
+## <img src="./icons/dataset_information.png" width="70"> Dataset Information
 
 The dataset contains Amazon e-commerce transaction records including:
 
@@ -108,7 +108,7 @@ Data cleaning includes:
 
 ---
 
-## 📈 Key Insights Generated
+## <img src="./icons/keyinsert.png" width="70">Key Insights Generated
 
 * Best-performing product categories
 * Monthly revenue patterns
@@ -147,7 +147,7 @@ streamlit run Web_Page.py
 
 ---
 
-## 📁 Project Structure
+## <img src="./icons/structure.png" width="70">Project Structure
 
 ```text
 Amazon-Tech-Trends-Sales-Insights-2026
@@ -165,13 +165,13 @@ Amazon-Tech-Trends-Sales-Insights-2026
 
 ---
 
-## 📸 Dashboard Preview
+## <img src="./icons/dashboard_fecture.png" width="70">Dashboard Preview
 
 Add screenshots of your dashboard here after deployment.
 
 ---
 
-## 🔮 Future Enhancements
+## <img src="./icons/fecture.png" width="70"> Future Enhancements
 
 * Sales Forecasting using Machine Learning
 * Customer Segmentation
@@ -182,7 +182,7 @@ Add screenshots of your dashboard here after deployment.
 
 ---
 
-## 👨‍💻 Author
+## <img src="./icons/muninagaraju.png" width="70"> Author
 
 **Muninagaraju Gudiboyina**
 
