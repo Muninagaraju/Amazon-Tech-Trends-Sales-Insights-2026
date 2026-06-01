@@ -182,7 +182,7 @@ Add screenshots of your dashboard here after deployment.
 
 ---
 
-## <img src="./icons/muninagaraju.png" width="70"> Author
+## <img src="./icons/author.png" width="70"> Author
 
 **Muninagaraju Gudiboyina**
 
@@ -211,7 +211,7 @@ The dashboard automatically adapts to both Light and Dark themes.
 ### 🌙 Dark Mode
 
 #### Dashboard Overview
-![Dark Dashboard](screenshots/dark_dashboard.png)
+![Dark Dashboard](screenshots/dark.png)
 
 #### Sales Analysis
 ![Dark Sales](screenshots/dark_sales.png)
