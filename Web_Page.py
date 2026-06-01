@@ -548,14 +548,15 @@ with col1:
 
     if os.path.exists(img_path):
 
-    img = Image.open(img_path)
+         img = Image.open(img_path)
 
-    st.image(
+         st.image(
         img,
         width=60
-    )
-else:
-    st.write("👨‍💻")
+        )
+    else:
+        st.write("👨‍💻")
+
 with col2:
 
     st.markdown("""
