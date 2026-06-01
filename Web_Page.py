@@ -19,7 +19,14 @@ print(os.getcwd())
 
 from PIL import Image
 
-icon = Image.open(r"C:\Users\HP\OneDrive\Desktop\Projects\Project-2\Amazon-Tech-Trends-Sales-Insights-2026\OIP.jpg")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+icon_path = os.path.join(
+    BASE_DIR,
+    "OIP.jpg"
+)
+
+icon = Image.open(icon_path)
 
 st.set_page_config(
     page_title="Amazon Sales Dashboard",
@@ -159,6 +166,9 @@ def load_data():
     st.error("amazon_sales.csv not found")
     return pd.DataFrame()
 df = load_data()
+if df.empty:
+    st.error("Dataset could not be loaded.")
+    st.stop()
 
 # ==========================================
 # HEADER
@@ -536,13 +546,16 @@ with col1:
         "muninagaraju.png"
     )
 
+    if os.path.exists(img_path):
+
     img = Image.open(img_path)
 
     st.image(
         img,
         width=60
     )
-
+else:
+    st.write("👨‍💻")
 with col2:
 
     st.markdown("""
