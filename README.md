@@ -9,7 +9,7 @@ An interactive data analytics dashboard built with Python, Streamlit, Pandas, an
 
 ---
 
-## 📌 Project Overview
+## <img src="./icons/p.png" width="70">Project Overview
 
 This project simulates a real-world Amazon sales analytics solution used by business analysts and decision-makers to monitor:
 
