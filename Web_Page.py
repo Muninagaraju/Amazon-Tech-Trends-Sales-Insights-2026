@@ -14,8 +14,12 @@ import os
 # ==========================================
 # PAGE CONFIG
 # ==========================================
+import os
+print(os.getcwd())
 
-icon = Image.open("OIP.jpg")
+from PIL import Image
+
+icon = Image.open(r"C:\Users\HP\OneDrive\Desktop\Projects\Project-2\Amazon-Tech-Trends-Sales-Insights-2026\OIP.jpg")
 
 st.set_page_config(
     page_title="Amazon Sales Dashboard",
@@ -117,51 +121,45 @@ def st_lucide(icon_name,size=35,color=None):
 # ==========================================
 # LOAD DATA
 # ==========================================
-import pandas as pd
-import streamlit as st
-import os
-
 
 @st.cache_data
 def load_data():
+    
 
-    # Absolute file path
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(BASE_DIR, "amazon_sales.csv")
 
-    file_path = os.path.join(
-        BASE_DIR,
-        "amazon_sales.csv"
-    )
+    print("Loading:", file_path)
+    print("Exists:", os.path.exists(file_path))
 
-    try:
+    if os.path.exists(file_path):
+
         df = pd.read_csv(file_path)
 
-        # Clean columns
-        df.columns = (
-            df.columns
-            .str.strip()
-            .str.lower()
-        )
+        df = df.dropna()
+        df = df.drop_duplicates()
 
-        # Convert date column
         df["purchase_date"] = pd.to_datetime(
             df["purchase_date"],
-            errors="coerce",
-            dayfirst=True
+            format="%d-%m-%Y",
+            errors="coerce"
+        )
+
+        df = df.dropna(subset=["purchase_date"])
+
+        df["is_returned"] = (
+            df["is_returned"]
+            .astype(str)
+            .str.lower()
+            .map({"true": 1, "false": 0})
         )
 
         return df
 
-    except Exception as e:
-        st.error(f"Error: {e}")
-        return pd.DataFrame()
-
-
-# LOAD DATA
+    st.error("amazon_sales.csv not found")
+    return pd.DataFrame()
 df = load_data()
 
-# CREATE FILTERED DATAFRAME
-filtered_df = df.copy()
 # ==========================================
 # HEADER
 # ==========================================
@@ -192,67 +190,45 @@ st.divider()
 # SIDEBAR FILTERS
 # ==========================================
 
-st.sidebar.header("Dashboard Filters")
-
-# CATEGORY (SAFE)
-if "category" in df.columns:
-    category_options = sorted(df["category"].dropna().unique())
-else:
-    category_options = []
-
-category = st.sidebar.multiselect(
-    "Category",
-    category_options,
-    default=category_options
+st.sidebar.header(
+"Dashboard Filters"
 )
 
-# DEVICE (SAFE)
-if "device" in df.columns:
-    device_options = sorted(df["device"].dropna().unique())
-else:
-    device_options = []
-
-device = st.sidebar.multiselect(
-    "Device",
-    device_options,
-    default=device_options
+category=st.sidebar.multiselect(
+"Category",
+sorted(df["category"].unique()),
+default=sorted(df["category"].unique())
 )
 
-# PAYMENT (SAFE)
-if "payment_method" in df.columns:
-    payment_options = sorted(df["payment_method"].dropna().unique())
-else:
-    payment_options = []
-
-payment = st.sidebar.multiselect(
-    "Payment Method",
-    payment_options,
-    default=payment_options
+device=st.sidebar.multiselect(
+"Device",
+sorted(df["device"].unique()),
+default=sorted(df["device"].unique())
 )
-# ==========================================
-# FILTER DATA (ADD THIS HERE)
-# ==========================================
 
-filtered_df = df.copy()
+payment=st.sidebar.multiselect(
+"Payment Method",
+sorted(df["payment_method"].unique()),
+default=sorted(df["payment_method"].unique())
+)
 
-if category:
-    filtered_df = filtered_df[filtered_df["category"].isin(category)]
 
-if device:
-    filtered_df = filtered_df[filtered_df["device"].isin(device)]
+filtered_df=df[
+(df["category"].isin(category))
+&
+(df["device"].isin(device))
+&
+(df["payment_method"].isin(payment))
+]
 
-if payment:
-    filtered_df = filtered_df[filtered_df["payment_method"].isin(payment)]
 
 # ==========================================
 # KPI
 # ==========================================
-st.write(filtered_df.columns)
-st.write(filtered_df)
-st.write(filtered_df.columns)
-st.write(type(filtered_df))
-total_revenue = filtered_df["final_price"].sum()
 
+total_revenue=filtered_df[
+"final_price"
+].sum()
 
 orders=len(filtered_df)
 
@@ -553,13 +529,18 @@ col1,col2=st.columns([1,8])
 
 with col1:
 
-    img=Image.open(
-    "muninagaraju.png"
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    img_path = os.path.join(
+        BASE_DIR,
+        "muninagaraju.png"
     )
 
+    img = Image.open(img_path)
+
     st.image(
-    img,
-    width=60
+        img,
+        width=60
     )
 
 with col2:
