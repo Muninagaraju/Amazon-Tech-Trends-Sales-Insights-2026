@@ -1,6 +1,6 @@
 # 🛒 Amazon Tech Trends & Sales Insights 2026
 
-![Amazon Dashboard](./screenshots/amazon_sales_dashboard.png)
+![Amazon Dashboard](./screenshots/dashboard.png)
 An interactive data analytics dashboard built with Python, Streamlit, Pandas, and Plotly to analyze Amazon e-commerce sales performance, customer behavior, product trends, and business KPIs.
 
 ##  Live Demo
